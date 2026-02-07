@@ -1,8 +1,13 @@
 // Instance-mode sketch for tab 2
 registerSketch('sk2', function (p) {
+  let waveModes;
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
-    p.angleMode(p.DEGREES);
+    p.waveModes = [
+      (a, t) => p.sin(a * 10 + t),
+      (a, t) => p.sin(a * 20 + t),
+      (a, t) => p.cos(a * 15 + t),
+    ];
   };
   p.draw = function () {
     p.background(20);
@@ -14,43 +19,30 @@ registerSketch('sk2', function (p) {
     const s = p.second();
     const label = p.nf(h, 2) + ':' + p.nf(m, 2) + ':' + p.nf(s, 2);
 
-    // -------- WAVE CLOCK PARAMETERS --------
-    let baseRadius = p.min(p.width, p.height) * 0.3;
+    /// ---- MAP TIME TO WAVE ----
+    let amp = p.map(s, 0, 59, 0, 80);   // seconds control wave height
+    let r = p.width / 4;               // base vinyl radius
+    let mode = p.waveModes[s % p.waveModes.length]; // change wave style every second
+    let t = p.frameCount * 0.05;
 
-    // seconds control wave growth (0 → flat, 59 → big waves)
-    let waveStrength = p.map(s, 0, 59, 0, baseRadius * 0.4);
-
-    // waveform style changes every second
-    let mode = s % 3;
-
+    // -------- DRAW WAVY VINYL CIRCLE --------
     p.noFill();
     p.stroke(200);
     p.strokeWeight(2);
 
-    // -------- DRAW WAVY VINYL CIRCLE --------
     p.beginShape();
-    for (let a = 0; a < 360; a += 2) {
-      let wave = 0;
-
-      // smooth sine
-      if (mode === 0) {
-        wave = p.sin(a * 4) * waveStrength;
-      }
-      // faster vibration
-      else if (mode === 1) {
-        wave = p.sin(a * 10) * waveStrength;
-      }
-      // organic noise wave
-      else {
-        wave = p.noise(a * 0.05, s * 0.1) * waveStrength * 2 - waveStrength;
-      }
-
-      let r = baseRadius + wave;
-      let x = r * p.cos(a);
-      let y = r * p.sin(a);
+    for (let a = 0; a < p.TWO_PI; a += 0.01) {
+      let wave = mode(a, t) * amp;
+      let x = (r + wave) * p.cos(a);
+      let y = (r + wave) * p.sin(a);
       p.vertex(x, y);
     }
     p.endShape(p.CLOSE);
+
+    // ---- CENTER VINYL HOLE ----
+    p.fill(20);
+    p.noStroke();
+    p.circle(0, 0, 40);
 
     // -------- CENTER LABEL --------
     p.fill(255);
@@ -63,7 +55,7 @@ registerSketch('sk2', function (p) {
     p.resetMatrix();
     p.fill(255);
     p.textAlign(p.LEFT, p.TOP);
-    p.textSize(40);
+    p.textSize(50);
     p.text(label, 12, 10);
     /*
     p.background(220);

@@ -21,7 +21,7 @@ registerSketch('sk2', function (p) {
 
     /// ---- MAP TIME TO WAVE ----
     let amp = p.map(s, 0, 59, 0, 80);   // seconds control wave height
-    let r = p.width / 4;               // base vinyl radius
+    let r = p.width / 6;               // base vinyl radius
     let mode = p.waveModes[s % p.waveModes.length]; // change wave style every second
     let t = p.frameCount * 0.05;
 

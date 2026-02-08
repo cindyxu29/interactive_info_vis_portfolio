@@ -54,9 +54,13 @@ registerSketch('sk3', function (p) {
       p.noFill();
       p.strokeWeight(weight);
 
-      p.stroke(40);
-      p.square(-size / 2, -size / 2, size);
+      let half = size / 2;
 
+      // background square
+      p.stroke(40);
+      p.square(-half, -half, size);
+
+      // progress
       p.stroke(col);
       let perimeter = size * 4;
       let drawLen = perimeter * progress;
@@ -68,13 +72,14 @@ registerSketch('sk3', function (p) {
         return len - d;
       }
 
-      let half = size / 2;
       let len = drawLen;
 
-      len = drawLine(-half, -half, half, -half, len);
+      // Start at TOP MIDDLE
+      len = drawLine(0, -half, half, -half, len);
       if (len > 0) len = drawLine(half, -half, half, half, len);
       if (len > 0) len = drawLine(half, half, -half, half, len);
-      if (len > 0) drawLine(-half, half, -half, -half, len);
+      if (len > 0) len = drawLine(-half, half, -half, -half, len);
+      if (len > 0) drawLine(-half, -half, 0, -half, len);
 
       p.pop();
     }
@@ -125,7 +130,7 @@ registerSketch('sk3', function (p) {
     // ===== DRAW SHAPES =====
     ring(rs, R, 14, p.color(90, 180, 255));          // seconds circle
     squareRing(rm, R * 1.3, 14, p.color(120, 255, 170)); // minutes square
-    triangleRing(rh, R * 1.0, 16, p.color(255, 120, 160)); // hours triangle
+    triangleRing(rh, R * 1.1, 16, p.color(255, 120, 160)); // hours triangle
 
     // Seconds droplet
     p.push();

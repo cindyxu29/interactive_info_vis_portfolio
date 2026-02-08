@@ -6,7 +6,30 @@ registerSketch('sk4', function (p) {
   
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
+
+    p.textAlign(p.CENTER, p.CENTER);
+    p.textSize(24);
+
+    // Text lines
+    lines = [
+      "CO2e = Carbon dioxide equivalent; unit for greenhouse gas emissions",
+      "Produce 1 kg of Beef results in 60 kg CO2e",
+      "With the same amount of CO2e, you can have:",
+      "8.5 kg Pork",
+      "9 kg Salmon",
+      "10 kg Poultry",
+      "12 kg Fish (farmed)",
+      "13 kg Eggs",
+      "15 kg Rice",
+      "43 kg Wheat",
+      "60 kg Corn",
+      "67 kg Peas",
+      "85 kg Bananas",
+      "150 kg Root Vegetables",
+      "200 kg Fruits"
+    ];
   };
+
   p.draw = function () {
     p.background(10);
 
@@ -25,6 +48,36 @@ registerSketch('sk4', function (p) {
     p.noStroke();
     for (let d of dots) {
       p.circle(d.x, d.y, 12);
+    }
+
+    // Draw text (centered)
+    let startY = p.height / 2 - showCount * 20;
+
+    for (let i = 0; i < showCount; i++) {
+
+      // Color rules
+      if (i == 0) {
+        p.fill(200); // gray
+      }
+      else if (i == 1) {
+        p.fill(255, 0, 0); // red
+      }
+      else if (i == 2) {
+        p.fill(255, 0, 0); // red
+      }
+      else {
+        let colors = [
+          [165, 229, 229],
+          [242, 182, 181],
+          [249, 218, 155],
+          [247, 247, 156],
+          [169, 237, 189]
+        ];
+        let c = colors[i % colors.length];
+        p.fill(c[0], c[1], c[2]);
+      }
+
+      p.text(lines[i], p.width / 2, startY + i * 40);
     }
 
 

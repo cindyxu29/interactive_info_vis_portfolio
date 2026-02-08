@@ -47,10 +47,12 @@ registerSketch('sk4', function (p) {
     p.fill(255);
     p.noStroke();
     for (let d of dots) {
-      p.circle(d.x, d.y, 12);
+      p.circle(d.x, d.y, 16);
     }
 
     // Draw text (centered)
+    p.textAlign(p.CENTER, p.CENTER);
+    p.textSize(24);
     let startY = p.height / 2 - showCount * 20;
 
     for (let i = 0; i < showCount; i++) {
@@ -81,18 +83,26 @@ registerSketch('sk4', function (p) {
     }
 
 
-    // -------- CORNER CLOCK DISPLAY --------
-    const h = p.hour();
-    const m = p.minute();
-    const s = p.second();
-    const label = p.nf(h, 2) + ':' + p.nf(m, 2) + ':' + p.nf(s, 2);
+      // -------- CORNER CLOCK DISPLAY --------
+      const h = p.hour();
+      const m = p.minute();
+      const s = p.second();
+      const label = p.nf(h, 2) + ':' + p.nf(m, 2) + ':' + p.nf(s, 2);
 
-    p.noStroke();
-    p.fill(255);
-    p.textAlign(p.LEFT, p.TOP);
-    p.textSize(30);
-    p.text(label, 12, 10); // top-left corner
-  
+      p.noStroke();
+      p.fill(255);
+      p.textAlign(p.LEFT, p.TOP);
+      p.textSize(30);
+      p.text(label, 12, 10); // top-left corner
+
+    p.mouseClicked = function () {
+      showCount++;
+
+      // Last click clears, next click restarts
+      if (showCount > lines.length) {
+        showCount = 0;
+      }
+    };
   };
   p.windowResized = function () { p.resizeCanvas(p.windowWidth, p.windowHeight); };
 });

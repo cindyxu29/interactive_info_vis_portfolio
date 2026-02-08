@@ -12,8 +12,9 @@ registerSketch('sk4', function (p) {
 
     // Text lines
     lines = [
+      "Wer are constantly generating carbon emissions, like the dots in the background",
       "CO2e = Carbon dioxide equivalent; unit for greenhouse gas emissions",
-      "Produce 1 kg of Beef results in 60 kg CO2e",
+      "Produce 1 kg of Beef results in 60 kg CO2e, which is a lot",
       "With the same amount of CO2e, you can have:",
       "8.5 kg Pork",
       "9 kg Salmon",
@@ -62,9 +63,12 @@ registerSketch('sk4', function (p) {
         p.fill(200); // gray
       }
       else if (i == 1) {
-        p.fill(255, 0, 0); // red
+        p.fill(200); // gray
       }
       else if (i == 2) {
+        p.fill(255, 0, 0); // red
+      }
+      else if (i == 3) {
         p.fill(255, 0, 0); // red
       }
       else {

@@ -19,7 +19,7 @@ registerSketch('sk3', function (p) {
     // Ratios
     const rs = s / 60;
     const rm = m / 60;
-    const rh = h / 12;
+    const rh = (h % 12) / 12;
 
     // Center + sizing
     p.translate(p.width / 2, p.height / 2);
@@ -104,17 +104,17 @@ registerSketch('sk3', function (p) {
 
       p.stroke(col);
       let edges = [
-        [pts[0], pts[1]],
-        [pts[1], pts[2]],
-        [pts[2], pts[0]],
+        [pts[0], pts[2]],
+        [pts[2], pts[1]],
+        [pts[1], pts[0]],
       ];
 
       let perimeter =
-        p.dist(pts[0].x, pts[0].y, pts[1].x, pts[1].y) +
-        p.dist(pts[1].x, pts[1].y, pts[2].x, pts[2].y) +
-        p.dist(pts[2].x, pts[2].y, pts[0].x, pts[0].y);
+        p.dist(pts[0].x, pts[0].y, pts[2].x, pts[2].y) +
+        p.dist(pts[2].x, pts[2].y, pts[1].x, pts[1].y) +
+        p.dist(pts[1].x, pts[1].y, pts[0].x, pts[0].y);
 
-      let drawLen = perimeter * progress;
+      let drawLen = perimeter * p.min(progress, 0.999);
 
       for (let [a, b] of edges) {
         if (drawLen <= 0) break;
@@ -129,8 +129,8 @@ registerSketch('sk3', function (p) {
 
     // ===== DRAW SHAPES =====
     ring(rs, R, 14, p.color(90, 180, 255));          // seconds circle
-    squareRing(rm, R * 1.3, 14, p.color(120, 255, 170)); // minutes square
-    triangleRing(rh, R * 1.1, 16, p.color(255, 120, 160)); // hours triangle
+    squareRing(rm, R * 1.3, 14, p.color(255, 120, 160)); // minutes square
+    triangleRing(rh, R * 1.1, 16, p.color(120, 255, 170)); // hours triangle
 
     // Seconds droplet
     p.push();
@@ -138,7 +138,7 @@ registerSketch('sk3', function (p) {
     const x = p.cos(a) * R;
     const y = p.sin(a) * R;
     p.noStroke();
-    p.fill(90, 180, 255);
+    p.fill(0, 114, 178);
     p.circle(x, y, 12);
     p.pop();
 

@@ -107,6 +107,18 @@ registerSketch('sk5', function (p) {
       }
     }
 
+    // 5. Legends
+    drawCountryLegend(p);
+    drawAxisLegend(p);
+
+    // 6. Tooltips
+    if (hoveredPoint) {
+      drawTooltip(p, hoveredPoint.x, hoveredPoint.y, `${hoveredPoint.country}\nYear: ${hoveredPoint.year}\nCases: ${hoveredPoint.value.toLocaleString()}`, hoveredPoint.color);
+    } else if (hoveredYear) {
+      drawTooltip(p, hoveredYear.x, hoveredYear.y - 40, hoveredYear.event, '#333');
+    }
+  };
+
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
   };

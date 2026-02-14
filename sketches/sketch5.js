@@ -119,15 +119,72 @@ registerSketch('sk5', function (p) {
     }
   };
 
-  p.setup = function () {
-    p.createCanvas(p.windowWidth, p.windowHeight);
-  };
-
-  p.draw = function () {
-    p.background(250);
-
-
+  // --- Helper Functions in Instance Mode ---
+  function drawCountryLegend(p) {
+    p.push();
+    let lx = p.width - 200;
+    let ly = margin + 100;
+    let itemH = 18;
+    p.fill(250, 250, 250, 200);
+    p.stroke(200);
+    p.rect(lx - 10, ly - 10, 180, covidData.length * itemH + 10, 4);
+    p.noStroke();
+    p.textAlign(p.LEFT, p.CENTER);
+    p.textSize(10);
+    for (let i = 0; i < covidData.length; i++) {
+      p.fill(covidData[i].color);
+      p.rect(lx, ly + (i * itemH), 12, 12);
+      p.fill(50);
+      p.text(covidData[i].country, lx + 20, ly + (i * itemH) + 6);
+    }
+    p.pop();
   }
 
-  p.windowResized = function () { p.resizeCanvas(p.windowWidth, p.windowHeight); };
+  function drawAxisLegend(p) {
+    p.push();
+    let lx = p.width - 200;
+    let ly = p.height - margin - 100;
+    p.fill(250, 250, 250, 200);
+    p.stroke(200);
+    p.rect(lx - 10, ly, 190, 95, 4);
+    p.noStroke();
+    p.fill(50);
+    p.textAlign(p.LEFT, p.TOP);
+    p.textSize(10);
+    p.textStyle(p.BOLD);
+    p.text("Guide:", lx, ly + 5);
+    p.textStyle(p.NORMAL);
+    p.text("X-Axis: Timeline (2020-2024)", lx, ly + 20);
+    p.text("Y-Axis: Total Cumulative Cases", lx, ly + 35);
+    p.text("Unit 'B': Billions (1,000,000,000)", lx, ly + 50);
+    p.fill(100, 0, 0);
+    p.text("• Hover points to see case numbers", lx, ly + 65);
+    p.text("• Hover years to see major events", lx, ly + 80);
+    p.pop();
+  }
+
+  function drawTooltip(p, x, y, content, col) {
+    p.push();
+    p.textSize(11);
+    let lines = content.split('\n');
+    let tw = 0;
+    for (let l of lines) tw = p.max(tw, p.textWidth(l) + 20);
+    let th = lines.length * 18 + 10;
+    let tx = x + 10;
+    let ty = y - th / 2;
+    if (tx + tw > p.width) tx = x - tw - 10;
+    if (ty < 0) ty = 10;
+
+    p.fill(255, 255, 235, 245);
+    p.stroke(col);
+    p.strokeWeight(1);
+    p.rect(tx, ty, tw, th, 4);
+    p.noStroke();
+    p.fill(0);
+    p.textAlign(p.LEFT, p.CENTER);
+    for (let i = 0; i < lines.length; i++) {
+      p.text(lines[i], tx + 10, ty + 10 + (i * 18));
+    }
+    p.pop();
+  }
 });

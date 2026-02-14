@@ -24,6 +24,90 @@ registerSketch('sk5', function (p) {
   const maxVal = 40000000000;
 
   p.setup = function () {
+    p.createCanvas(800, 600);
+  };
+
+  p.draw = function () {
+    p.background(255);
+
+    let axisSpacing = (p.width - margin - rightMargin) / (years.length - 1);
+    let hoveredPoint = null;
+    let hoveredYear = null;
+
+    // 1. Draw Overall Title
+    p.textAlign(p.CENTER);
+    p.textSize(18);
+    p.fill(40);
+    p.textStyle(p.BOLD);
+    p.text("Parallel Coordinates: Cumulative COVID-19 Cases by Year", p.width / 2, 40);
+    p.textStyle(p.NORMAL);
+
+    // 2. Draw Y-Axis Scale
+    p.stroke(180);
+    p.line(margin - 5, margin, margin - 5, p.height - margin);
+    p.textAlign(p.RIGHT);
+    p.textSize(10);
+    p.noStroke();
+    p.fill(100);
+    for (let i = 0; i <= 8; i++) {
+      let val = i * 5000000000;
+      let y = p.map(val, 0, maxVal, p.height - margin, margin);
+      p.text((val / 1000000000) + "B", margin - 15, y + 4);
+      p.stroke(230);
+      p.line(margin - 10, y, margin - 5, y);
+    }
+
+    // 3. Draw Year Vertical Axes
+    for (let i = 0; i < years.length; i++) {
+      let x = margin + i * axisSpacing;
+      p.stroke(210);
+      p.strokeWeight(1);
+      p.line(x, margin, x, p.height - margin);
+
+      let labelY = p.height - margin + 25;
+      let dLabel = p.dist(p.mouseX, p.mouseY, x, labelY);
+
+      if (dLabel < 20) {
+        hoveredYear = { year: years[i], event: events[i], x: x, y: labelY };
+        p.fill(255, 0, 0);
+      } else {
+        p.fill(0);
+      }
+
+      p.noStroke();
+      p.textAlign(p.CENTER);
+      p.textSize(12);
+      p.text(years[i], x, labelY);
+    }
+
+    // 4. Draw Country Trends
+    for (let country of covidData) {
+      p.noFill();
+      p.stroke(country.color);
+      p.strokeWeight(2);
+
+      p.beginShape();
+      for (let j = 0; j < country.values.length; j++) {
+        let x = margin + j * axisSpacing;
+        let y = p.map(country.values[j], 0, maxVal, p.height - margin, margin);
+        p.vertex(x, y);
+      }
+      p.endShape();
+
+      for (let j = 0; j < country.values.length; j++) {
+        let x = margin + j * axisSpacing;
+        let y = p.map(country.values[j], 0, maxVal, p.height - margin, margin);
+        p.fill(country.color);
+        p.noStroke();
+        p.ellipse(x, y, 6, 6);
+
+        if (p.dist(p.mouseX, p.mouseY, x, y) < 8) {
+          hoveredPoint = { country: country.country, year: years[j], value: country.values[j], x: x, y: y, color: country.color };
+        }
+      }
+    }
+
+  p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
   };
 
